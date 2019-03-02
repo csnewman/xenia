@@ -52,15 +52,15 @@ KernelState::KernelState(Emulator* emulator)
   processor_ = emulator->processor();
   file_system_ = emulator->file_system();
 
+  assert_null(shared_kernel_state_);
+  shared_kernel_state_ = this;
+
   app_manager_ = std::make_unique<xam::AppManager>();
   user_profile_ = std::make_unique<xam::UserProfile>();
 
   auto content_root = emulator_->content_root();
   content_root = xe::to_absolute_path(content_root);
   content_manager_ = std::make_unique<xam::ContentManager>(this, content_root);
-
-  assert_null(shared_kernel_state_);
-  shared_kernel_state_ = this;
 
   // Hardcoded maximum of 2048 TLS slots.
   tls_bitmap_.Resize(2048);
