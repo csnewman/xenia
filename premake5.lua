@@ -240,6 +240,7 @@ solution("xenia")
   include("third_party/volk.lua")
   include("third_party/xxhash.lua")
   include("third_party/yaml-cpp.lua")
+  include("third_party/protobuf.lua")
 
   include("src/xenia")
   include("src/xenia/app")

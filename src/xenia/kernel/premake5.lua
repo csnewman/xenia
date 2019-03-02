@@ -12,11 +12,13 @@ project("xenia-kernel")
     "xenia-cpu",
     "xenia-hid",
     "xenia-vfs",
+    "protobuf"
   })
   defines({
   })
   includedirs({
     project_root.."/third_party/gflags/src",
+    project_root.."/third_party/protobuf/src",
   })
   recursive_platform_files()
   files({

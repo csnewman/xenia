@@ -1,0 +1,40 @@
+group("third_party")
+project("protobuf")
+  uuid("e319da87-69ed-4517-8f65-bd25e9cc02a3")
+  kind("StaticLib")
+  language("C++")
+
+  defines({
+    "_LIB",
+  })
+  includedirs({
+    "protobuf/src",
+  })
+  files({
+    "protobuf/src/google/protobuf/arena.cc",
+    "protobuf/src/google/protobuf/extension_set.cc",
+    "protobuf/src/google/protobuf/generated_message_table_driven_lite.cc",
+    "protobuf/src/google/protobuf/generated_message_util.cc",
+    "protobuf/src/google/protobuf/implicit_weak_message.cc",
+    "protobuf/src/google/protobuf/io/coded_stream.cc",
+    "protobuf/src/google/protobuf/io/zero_copy_stream.cc",
+    "protobuf/src/google/protobuf/io/zero_copy_stream_impl_lite.cc",
+    "protobuf/src/google/protobuf/message_lite.cc",
+    "protobuf/src/google/protobuf/repeated_field.cc",
+    "protobuf/src/google/protobuf/stubs/bytestream.cc",
+    "protobuf/src/google/protobuf/stubs/common.cc",
+    "protobuf/src/google/protobuf/stubs/int128.cc",
+    "protobuf/src/google/protobuf/stubs/io_win32.cc",
+    "protobuf/src/google/protobuf/stubs/status.cc",
+    "protobuf/src/google/protobuf/stubs/statusor.cc",
+    "protobuf/src/google/protobuf/stubs/stringpiece.cc",
+    "protobuf/src/google/protobuf/stubs/stringprintf.cc",
+    "protobuf/src/google/protobuf/stubs/structurally_valid.cc",
+    "protobuf/src/google/protobuf/stubs/strutil.cc",
+    "protobuf/src/google/protobuf/stubs/time.cc",
+    "protobuf/src/google/protobuf/wire_format_lite.cc",
+  })
+  filter("platforms:Windows")
+    buildoptions({
+      "/WX-"
+    })
