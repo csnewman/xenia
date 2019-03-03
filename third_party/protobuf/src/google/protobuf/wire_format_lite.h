@@ -53,6 +53,9 @@
 #define GOOGLE_PROTOBUF_UTF8_VALIDATION_ENABLED
 #endif
 
+#pragma warning(disable : 4700)
+#pragma warning(disable : 4244)
+
 // Avoid conflict with iOS where <ConditionalMacros.h> #defines TYPE_BOOL.
 //
 // If some one needs the macro TYPE_BOOL in a file that includes this header,
