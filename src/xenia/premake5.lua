@@ -13,5 +13,6 @@ project("xenia-core")
   })
   includedirs({
     project_root.."/third_party/gflags/src",
+    project_root.."/third_party/protobuf/src",
   })
   files({"*.h", "*.cc"})
