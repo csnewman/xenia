@@ -15,6 +15,7 @@
 #include "xenia/base/byte_order.h"
 #include "xenia/base/math.h"
 #include "xenia/kernel/xobject.h"
+#include "xam/virtnet/virtnet_manager.h"
 
 namespace xe {
 namespace kernel {
@@ -140,6 +141,10 @@ class XSocket : public XObject {
   uint16_t bound_port_ = 0;
 
   bool broadcast_socket_ = false;
+
+  bool virtnet_mode_ = false;
+  uint32_t virtnet_handle_ = 0;
+  VirtNetManager* virtnet_ = 0;
 
   std::unique_ptr<xe::threading::Event> event_;
   std::mutex incoming_packet_mutex_;

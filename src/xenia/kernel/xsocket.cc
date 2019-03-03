@@ -32,11 +32,26 @@ namespace xe {
 namespace kernel {
 
 XSocket::XSocket(KernelState* kernel_state)
-    : XObject(kernel_state, XObject::kTypeSocket) {}
+  : XObject(kernel_state, XObject::kTypeSocket) {
+  virtnet_mode_ = emulator()->virtnet;
+
+  if (virtnet_mode_) {
+    auto xam = kernel_state->GetKernelModule<xam::XamModule>("xam.xex");
+    virtnet_ = xam->virtnet;
+  }
+
+}
 
 XSocket::XSocket(KernelState* kernel_state, uint64_t native_handle)
-    : XObject(kernel_state, XObject::kTypeSocket),
-      native_handle_(native_handle) {}
+  : XObject(kernel_state, XObject::kTypeSocket),
+    native_handle_(native_handle) {
+  virtnet_mode_ = emulator()->virtnet;
+
+  if (virtnet_mode_) {
+    auto xam = kernel_state->GetKernelModule<xam::XamModule>("xam.xex");
+    virtnet_ = xam->virtnet;
+  }
+}
 
 XSocket::~XSocket() { Close(); }
 
@@ -44,6 +59,20 @@ X_STATUS XSocket::Initialize(AddressFamily af, Type type, Protocol proto) {
   af_ = af;
   type_ = type;
   proto_ = proto;
+
+  if (virtnet_mode_) {
+    VirtNetMessage msg;
+    ManagementMessage* man_msg = msg.mutable_management_message();
+    CreateSocketRequest* csr_msg = man_msg->mutable_create_socket_request();
+    csr_msg->set_address_family(af);
+    csr_msg->set_type(type);
+    csr_msg->set_protocol(proto);
+
+    VirtNetMessage response = virtnet_->send_packet_with_result(msg);
+    CreateSocketResponse resp = response.management_message().create_socket_response();
+    virtnet_handle_ = resp.handle();
+    return resp.status() == 1 ? X_STATUS_SUCCESS : X_STATUS_UNSUCCESSFUL;
+  }
 
   if (proto == Protocol::IPPROTO_VDP) {
     // VDP is a layer on top of UDP.
@@ -81,7 +110,7 @@ X_STATUS XSocket::SetOption(uint32_t level, uint32_t optname, void* optval_ptr,
   }
 
   int ret =
-      setsockopt(native_handle_, level, optname, (char*)optval_ptr, optlen);
+    setsockopt(native_handle_, level, optname, (char*)optval_ptr, optlen);
   if (ret < 0) {
     // TODO: WSAGetLastError()
     return X_STATUS_UNSUCCESSFUL;
@@ -199,7 +228,7 @@ int XSocket::RecvFrom(uint8_t* buf, uint32_t buf_len, uint32_t flags,
                      flags, (sockaddr*)&nfrom, &nfromlen);
   if (from) {
     from->sin_family = nfrom.sin_family;
-    from->sin_addr = ntohl(nfrom.sin_addr.s_addr);  // BE <- BE
+    from->sin_addr = ntohl(nfrom.sin_addr.s_addr); // BE <- BE
     from->sin_port = nfrom.sin_port;
     memset(&from->sin_zero, 0, 8);
   }
@@ -256,5 +285,5 @@ bool XSocket::QueuePacket(uint32_t src_ip, uint16_t src_port,
   return true;
 }
 
-}  // namespace kernel
-}  // namespace xe
+} // namespace kernel
+} // namespace xe
