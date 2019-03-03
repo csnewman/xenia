@@ -148,6 +148,8 @@ class Emulator {
   xe::Delegate<> on_launch;
   xe::Delegate<> on_exit;
 
+  bool virtnet;
+
  private:
   static bool ExceptionCallbackThunk(Exception* ex, void* data);
   bool ExceptionCallback(Exception* ex);

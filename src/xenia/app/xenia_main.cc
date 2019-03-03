@@ -47,6 +47,8 @@ DEFINE_string(hid, "any", "Input system. Use: [any, nop, winkey, xinput]");
 DEFINE_string(target, "", "Specifies the target .xex or .iso to execute.");
 DEFINE_bool(fullscreen, false, "Toggles fullscreen");
 
+DEFINE_bool(virtnet, false, "Enable virtnet mdoe");
+
 DEFINE_string(content_root, "", "Root path for content (save/etc) storage.");
 
 DEFINE_bool(mount_scratch, false, "Enable scratch mount");
@@ -182,6 +184,7 @@ int xenia_main(const std::vector<std::wstring>& args) {
 
   // Create the emulator but don't initialize so we can setup the window.
   auto emulator = std::make_unique<Emulator>(L"", content_root);
+  emulator->virtnet = FLAGS_virtnet;
 
   // Main emulator display window.
   auto emulator_window = EmulatorWindow::Create(emulator.get());
