@@ -16,6 +16,7 @@
 #include "xenia/kernel/kernel_module.h"
 #include "xenia/kernel/kernel_state.h"
 #include "xenia/kernel/xam/xam_ordinals.h"
+#include "virtnet/virtnet_manager.h"
 
 namespace xe {
 namespace kernel {
@@ -37,6 +38,8 @@ class XamModule : public KernelModule {
 
   const LoaderData& loader_data() const { return loader_data_; }
   LoaderData& loader_data() { return loader_data_; }
+
+  VirtNetManager* virtnet;
 
  private:
   LoaderData loader_data_;
